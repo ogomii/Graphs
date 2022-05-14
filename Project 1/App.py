@@ -11,7 +11,7 @@ class App(tk.Tk):
     def __init__(self):
         super().__init__()
 
-        self.graph = Graph
+        self.graph = Graph()
 
         self.title('Graphs - Project 1')
         self.geometry('1360x720')
@@ -108,6 +108,9 @@ class App(tk.Tk):
         self.to_incidence_matrix_button.config(state=tk.DISABLED)
         self.graph_text_output.insert(INSERT, Graph.incidence_matrix_to_str(self.graph.content))
 
+    def visualize_graph(self):
+        self.graph.visualize(self.graph_image_output)
+
     def reset_buttons(self) -> None:
         self.graph_text_output.delete('1.0', 'end')
         self.to_adjacency_list_button.config(state=tk.ACTIVE)
@@ -145,7 +148,7 @@ class App(tk.Tk):
         self.to_incidence_matrix_button = tk.Button(self, text='To incidence matrix', command=self.to_inc_matrix)
         self.to_incidence_matrix_button.grid(column=0, row=6, padx=10, pady=10)
 
-        self.visualize_button = tk.Button(self, text='Visualize Graph')
+        self.visualize_button = tk.Button(self, text='Visualize Graph', command=self.visualize_graph)
         self.visualize_button.grid(column=0, row=7, padx=10, pady=10)
 
         self.graph_text_output = tk.Text(self, width=40, height=20)

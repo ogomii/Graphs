@@ -1,8 +1,9 @@
-from os import linesep
-from turtle import shape
+import math
+import tkinter as tk
 import numpy as np
 from collections import defaultdict
 from enum import Enum
+from Converter import Converter
 
 class GraphTypes(Enum):
     AdjacencyList = 1,
@@ -13,6 +14,39 @@ class Graph:
     def __init__(self):
         self.content = None
         self.type = None
+
+    def visualize(self, canvas: tk.Canvas) -> None:
+        canvas.delete('all')
+
+        graph_copy = defaultdict(list)
+
+        if self.type is GraphTypes.AdjacencyMatrix:
+            graph_copy = Converter.adj_matrix_to_adj_list(self.content)
+        if self.type is GraphTypes.IncidenceMatrix:
+            graph_copy = Converter.inc_matrix_to_adj_list(self.content)
+        else:
+            graph_copy = self.content
+
+        vertices_number = len(graph_copy)
+        center_x = canvas.winfo_width() / 2
+        center_y = canvas.winfo_height() / 2 
+        radius = min(center_x, center_y) / 1.25
+        angle = 2 * math.pi / vertices_number
+
+        for i in range(1, vertices_number+1):
+            current_angle = i * angle
+            x = center_x + radius * math.sin(current_angle)
+            y = center_y - radius * math.cos(current_angle)
+
+            for connected_edge in graph_copy[i]:
+                connected_edge_angle = angle * connected_edge
+                connected_edge_x = center_x + radius * math.sin(connected_edge_angle)
+                connected_edge_y = center_y - radius * math.cos(connected_edge_angle)
+
+                canvas.create_line(x, y, connected_edge_x, connected_edge_y)
+
+            canvas.create_oval(x-20, y-20, x+20, y+20, outline='black', fill='white', width=1)
+            canvas.create_text(x, y, text=str(i))
 
     @staticmethod
     def load_adjacency_list(path:str) -> dict:

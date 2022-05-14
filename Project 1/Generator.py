@@ -50,7 +50,6 @@ class Generator:
                     generated_edges = generated_edges + 1
                     edge = (i, j)
                     edges_list.append(edge)
-
         
         incidence_matrix: np.ndarray = np.zeros((vertices_number, generated_edges), int)
 
