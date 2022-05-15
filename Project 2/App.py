@@ -7,6 +7,7 @@ from sequnce import check_sequnce
 from components import components, comp_to_string, find_biggest_comp
 from euler import generate_random_euler_graph, get_euler_cycle
 from regular import generate_regular_graph
+from hamilton import get_path_hamilton
 from Graph import Graph, GraphTypes
 from Converter import Converter
 
@@ -74,6 +75,16 @@ class App(tk.Tk):
         self.graph_text_output.insert(INSERT, Graph.adjacency_list_to_str(self.graph.content))
         self.graph.visualize(self.graph_image_output)
 
+    def check_hamilton(self) -> None:
+        path = get_path_hamilton(self.graph.content.copy())
+
+        if path:
+            self.check_hamilton_label['text'] = 'True'
+            self.hamilton_path_label['text'] = path
+        else:
+            self.check_hamilton_label['text'] = 'False'
+            self.hamilton_path_label['text'] = ''
+
     def create_widgets(self) -> None:
         self.sequnce_label = tk.Label(self, text='Sequence: ')
         self.sequnce_label.grid(column=0, row=0, padx=10, pady=10)
@@ -121,8 +132,17 @@ class App(tk.Tk):
         self.regular_graph_vertices_degree_entry = tk.Entry(self)
         self.regular_graph_vertices_degree_entry.grid(column=1, row=8, padx=10, pady=10)
 
-        self.generate_random_euler_button = tk.Button(self, text='Random euler graph', command=self.generate_random_regular)
-        self.generate_random_euler_button.grid(column=0, row=9, padx=10, pady=10)
+        self.generate_random_regular_button = tk.Button(self, text='Random regular graph', command=self.generate_random_regular)
+        self.generate_random_regular_button.grid(column=0, row=9, padx=10, pady=10)
+
+        self.check_hamilton_button = tk.Button(self, text='Check if hamilton', command=self.check_hamilton)
+        self.check_hamilton_button.grid(column=0, row=10, padx=10, pady=10)
+
+        self.check_hamilton_label = tk.Label(self, text='')
+        self.check_hamilton_label.grid(column=1, row=10, padx=10, pady=10)
+
+        self.hamilton_path_label = tk.Label(self, text='')
+        self.hamilton_path_label.grid(column=0, columnspan=2, row=11, padx=10, pady=10)
 
         self.graph_text_output = tk.Text(self, width=40, height=20)
         self.graph_text_output.grid(column=2, row=0, rowspan=14, padx=10, pady=10)
