@@ -1,4 +1,5 @@
 from email.generator import Generator
+from random import randint
 import tkinter as tk
 from tkinter import INSERT, filedialog as fd
 
@@ -53,13 +54,16 @@ class App(tk.Tk):
             self.graph_text_output.insert(INSERT, comp_to_string(comp_list, self.graph.content))
             self.graph_text_output.insert(INSERT, 'Największa składowa ma numer: ' + str(find_biggest_comp(comp_list)))
 
+    def generate_random_euler(self) -> None:
+        vertices = randint(3, 20)
+
     def create_widgets(self) -> None:
         self.sequnce_label = tk.Label(self, text='Sequence: ')
         self.sequnce_label.grid(column=0, row=0, padx=10, pady=10)
 
         self.sequence_entry = tk.Entry(self)
         self.sequence_entry.grid(column=1, row=0, padx=10, pady=10)
-        self.sequence_entry.insert(INSERT, '4 2 2 3 2 1 4 2 2 2 2')
+        #self.sequence_entry.insert(INSERT, '4 2 2 3 2 1 4 2 2 2 2')
 
         self.sequence_check_button = tk.Button(self, text="Check sequence", command=self.check_sequence_action)
         self.sequence_check_button.grid(column=0, row=1, padx=10, pady=10)
@@ -78,6 +82,9 @@ class App(tk.Tk):
 
         self.component_button = tk.Button(self, text='Get components', command=self.get_components)
         self.component_button.grid(column=0, row=4, padx=10, pady=10)
+
+        self.generate_random_euler_button = tk.Button(self, text='Random euler graph', command=self.generate_random_euler)
+        self.generate_random_euler_button.grid(column=0, row=5, padx=10, pady=10)
 
         self.graph_text_output = tk.Text(self, width=40, height=20)
         self.graph_text_output.grid(column=2, row=0, rowspan=14, padx=10, pady=10)
