@@ -20,12 +20,13 @@ class Graph:
 
         graph_copy = defaultdict(list)
 
+        if self.type is GraphTypes.AdjacencyList:
+            graph_copy = self.content.copy()
         if self.type is GraphTypes.AdjacencyMatrix:
             graph_copy = Converter.adj_matrix_to_adj_list(self.content)
         if self.type is GraphTypes.IncidenceMatrix:
             graph_copy = Converter.inc_matrix_to_adj_list(self.content)
-        else:
-            graph_copy = self.content
+
 
         vertices_number = len(graph_copy)
         center_x = canvas.winfo_width() / 2
@@ -33,20 +34,32 @@ class Graph:
         radius = min(center_x, center_y) / 1.25
         angle = 2 * math.pi / vertices_number
 
-        for i in range(1, vertices_number+1):
+        positions: list = []
+
+        canvas.create_oval(center_x - radius, center_y - radius, center_x + radius, center_y + radius, outline='red', width=2, dash=(100, 50))
+
+        for i in range(0, vertices_number):
             current_angle = i * angle
             x = center_x + radius * math.sin(current_angle)
             y = center_y - radius * math.cos(current_angle)
-
-            for connected_edge in graph_copy[i]:
-                connected_edge_angle = angle * connected_edge
-                connected_edge_x = center_x + radius * math.sin(connected_edge_angle)
-                connected_edge_y = center_y - radius * math.cos(connected_edge_angle)
-
-                canvas.create_line(x, y, connected_edge_x, connected_edge_y)
-
-            canvas.create_oval(x-20, y-20, x+20, y+20, outline='black', fill='white', width=1)
-            canvas.create_text(x, y, text=str(i))
+            
+            for connected_edge in graph_copy[i + 1]:
+                connected_edge = connected_edge - 1
+                if(connected_edge > i):
+                    conneted_angle = connected_edge * angle
+                    connected_x = center_x + radius * math.sin(conneted_angle)
+                    connected_y = center_y - radius * math.cos(conneted_angle)
+                
+                    canvas.create_line(x, y, connected_x, connected_y, width=3)
+            
+            positions.append((x, y))
+            
+        for i in range(0, vertices_number):
+            x, y = positions[i]
+            scale = 0.1
+            pos = (x - radius * scale, y - radius * scale, x + radius * scale, y + radius * scale)
+            canvas.create_oval(pos[0], pos[1], pos[2], pos[3], outline='#343aeb', fill='#6b7cc9', width=2.5)
+            canvas.create_text(x, y, text=str(i + 1), font=('Arial',int(radius * scale/2),'bold'))
 
     @staticmethod
     def load_adjacency_list(path:str) -> dict:
