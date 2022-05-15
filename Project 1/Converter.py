@@ -27,6 +27,7 @@ class Converter:
         x, y = adj_matrix.shape
         
         for i in range(0, x):
+            adj_list[i+1]
             for j in range(0, y):
                 if adj_matrix[i][j] == 1:
                     adj_list[i+1].append(j+1)
